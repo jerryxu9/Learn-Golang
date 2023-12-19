@@ -1,7 +1,13 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"mongoapi/router"
+	"net/http"
+)
 
 func main() {
-	fmt.Println("MongoDB API")
+	r := router.Router()
+	http.ListenAndServe(":4000", r)
+	fmt.Println("Listening at port 4000")
 }
