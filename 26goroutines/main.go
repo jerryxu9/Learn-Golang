@@ -7,7 +7,9 @@ import (
 	"sync"
 )
 
+var signals = []string{"test"}
 var wg sync.WaitGroup // this is normally a pointer
+var mut sync.Mutex    // this is normally a pointer
 
 func main() {
 	// go is a keyword used to create goroutine
@@ -28,6 +30,7 @@ func main() {
 	}
 
 	wg.Wait()
+	fmt.Println(signals)
 }
 
 // func greeter(s string) {
@@ -45,6 +48,11 @@ func getStatusCode(endpoint string) {
 	if err != nil {
 		log.Fatal(err)
 	} else {
+		// Allow only one goroutine to modify signals at a time
+		mut.Lock()
+		signals = append(signals, endpoint)
+		mut.Unlock()
+
 		fmt.Printf("%d status code for website %s\n", res.StatusCode, endpoint)
 	}
 }
